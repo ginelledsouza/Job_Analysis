@@ -15,5 +15,11 @@ else:
     print("Data holds different values")
     
 # Data Analysis
-Job = ", ".join(Data["job title"].value_counts().head().index)
-print("The Top 5 Jobs Are: {}".format(Job))
+result = ", ".join(Data["job title"].value_counts().head().index)
+print("The Top 5 Jobs Are: {}".format(result))
+
+result = ", ".join([i.split("\n")[0] for i in Data["company name"].value_counts().head().index])
+print("The Top 5 Companies Are: {}".format(result))
+
+result = ", ".join(Data["location"].value_counts().head().index)
+print("The Top 5 Location Are: {}".format(result))

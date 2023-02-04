@@ -22,6 +22,7 @@ else:
 result = ", ".join(Data["job title"].value_counts().head().index)
 print("The Top 5 Jobs Are: {}".format(result))
 
+Data["company name"] = Data["company name"].apply(lambda x :re.sub('[^A-Za-z]+', ' ', x).strip())
 result = ", ".join([i.split("\n")[0] for i in Data["company name"].value_counts().head().index])
 print("The Top 5 Companies Are: {}".format(result))
 
@@ -55,5 +56,20 @@ for w in word_tokens:
     if w not in stop_words:
         filtered_sentence.append(w)
   
+Text = " ".join(filtered_sentence).lower()
 TopRequirement = word_count(Text)
 TopRequirement = sorted(TopRequirement.items(), key=lambda x:x[1],reverse=True)[:10]
+
+result = ", ".join([i for i in dict(TopRequirement).keys()])
+print("The Top Words In Job Description Are: {}".format(result))
+
+sizeMap = {"-1":0,"Unknown":0,"1 to 50 Employees":1,"51 to 200 Employees":2,
+           "201 to 500 Employees":3,"501 to 1000 Employees":4,"1001 to 5000 Employees":5,
+           "5001 to 10000 Employees":6,"10000+ Employees":7}
+
+sizeMap_swap = {v: k for k, v in sizeMap.items()}
+
+Data["sizeRank"] = Data["size"].replace(sizeMap)
+
+result = Data.groupby("sizeRank").count()["company name"].reset_index()
+result["sizeRank"] = result["sizeRank"].replace(sizeMap_swap)
